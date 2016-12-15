@@ -1,8 +1,6 @@
 package com.heynaveed.tweetfast.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +9,7 @@ import android.widget.Toast;
 
 import com.heynaveed.tweetfast.R;
 import com.heynaveed.tweetfast.utils.Colors;
+import com.heynaveed.tweetfast.utils.Session;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -50,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                 // TODO: Remove toast and use the TwitterSession's userID
                 // with your app's user model
                 String msg = "Logged in as: " + session.getUserName();
+                Session.username = session.getUserName();
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
             }
             @Override
