@@ -16,7 +16,7 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import io.fabric.sdk.android.Fabric;
 
-public class TwitterAuth extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
     private static final String TWITTER_KEY = "o2psFcURWRf6y6ymutuweNLMw";
@@ -30,7 +30,7 @@ public class TwitterAuth extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
-        setContentView(R.layout.activity_twitter_auth);
+        setContentView(R.layout.activity_login);
 
         loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
         loginButton.setCallback(new Callback<TwitterSession>() {
