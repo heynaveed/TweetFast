@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 
 
-class ConnectionHandler {
+final class ConnectionHandler {
 
     private String response;
 
@@ -38,7 +38,7 @@ class ConnectionHandler {
             con.setDoInput(true);
             con.setRequestMethod("GET");
             con.setRequestProperty("Host", "api.twitter.com");
-            con.setRequestProperty("User-Agent", "QualiTweeter");
+            con.setRequestProperty("User-Agent", "TweetFast");
             con.setRequestProperty("Authorization", "Bearer " + bearerToken);
             con.setUseCaches(false);
 
@@ -66,7 +66,7 @@ class ConnectionHandler {
         }
     }
 
-    public String getResponse(){
+    String getResponse(){
         return response;
     }
 }
