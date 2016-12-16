@@ -15,9 +15,9 @@ public class ConnectionHandler {
 
     private String response;
 
-    public ConnectionHandler(String getResourceURL, BearerToken bToken){
+    public ConnectionHandler(String getResourceURL, String bToken){
         try {
-            response = readResponse(requestConnection(getResourceURL, bToken.getBearerToken()));
+            response = readResponse(requestConnection(getResourceURL, bToken));
 
         } catch (IOException ex) {
             Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -28,7 +28,7 @@ public class ConnectionHandler {
         response = readResponse(con);
     }
 
-    private HttpsURLConnection requestConnection(String resourceURL, String bearerToken) throws IOException{
+    private HttpsURLConnection requestConnection(String resourceURL, String bToken) throws IOException{
 
         HttpsURLConnection con = null;
         try{
@@ -38,8 +38,8 @@ public class ConnectionHandler {
             con.setDoInput(true);
             con.setRequestMethod("GET");
             con.setRequestProperty("Host", "api.twitter.com");
-            con.setRequestProperty("User-Agent", "QualiTweeter");
-            con.setRequestProperty("Authorization", "Bearer " + bearerToken);
+            con.setRequestProperty("User-Agent", "TweetFast");
+            con.setRequestProperty("Authorization", "Bearer " + bToken);
             con.setUseCaches(false);
 
             return con;
@@ -54,15 +54,15 @@ public class ConnectionHandler {
             StringBuilder str = new StringBuilder();
 
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line = "";
+            String line;
 
             while((line = br.readLine()) != null){
-                str.append(line + System.getProperty("line.separator"));
+                str.append(line).append(System.getProperty("line.separator"));
             }
             return str.toString();
         }
         catch (IOException e){
-            return new String();
+            return "";
         }
     }
 
