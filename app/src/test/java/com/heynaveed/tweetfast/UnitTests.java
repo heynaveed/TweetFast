@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class UnitTests {
 
+    private static final String testUsername = "heynaveed";
     private static BearerToken token = null;
 
     static {
@@ -39,15 +40,13 @@ public class UnitTests {
 
     @Test
     public void user_loadsWithUsername() throws IOException {
-        final String username = "heynaveed";
-        User user = new User(username, token.getBearerToken());
-        assertEquals(username, user.getUsername().toLowerCase());
+        User user = new User(testUsername, token.getBearerToken());
+        assertEquals(testUsername, user.getUsername().toLowerCase());
     }
 
     @Test
     public void user_loadsWithProfileInfo() throws IOException {
-        final String username = "heynaveed";
-        User user = new User(username, token.getBearerToken());
+        User user = new User(testUsername, token.getBearerToken());
         assertEquals(true, user.getProfileInfo() != null);
     }
 }
