@@ -10,7 +10,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.heynaveed.tweetfast.R;
-import com.heynaveed.tweetfast.entities.User;
+import com.heynaveed.tweetfast.tasks.RequestProfileInfo;
+import com.heynaveed.tweetfast.tasks.RequestBearerToken;
 import com.heynaveed.tweetfast.utils.Colors;
 import com.heynaveed.tweetfast.utils.Session;
 import com.twitter.sdk.android.Twitter;
@@ -21,27 +22,30 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
-import java.io.IOException;
-
 import io.fabric.sdk.android.Fabric;
 
 public class LoginActivity extends AppCompatActivity {
 
-    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-    public static final String TWITTER_KEY = "o2psFcURWRf6y6ymutuweNLMw";
-    public static final String TWITTER_SECRET = "PasA4q4FM7xLDkmsqpJg5qcnxReQd9nozsewoMZuGIaFAPsFLi";
+    // To be obfuscated.
+    public static final String KEY = "o2psFcURWRf6y6ymutuweNLMw";
+    public static final String SECRET = "PasA4q4FM7xLDkmsqpJg5qcnxReQd9nozsewoMZuGIaFAPsFLi";
 
     private TwitterLoginButton loginButton;
     private boolean isLoggedIn = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        RequestBearerToken requestToken = new RequestBearerToken();
+        requestToken.execute();
+        Session.tokenString = requestToken.getTokenString();
+
         ActionBar bar = getSupportActionBar();
         bar.setBackgroundDrawable(Colors.TWITTER_BLUE);
 
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(KEY, SECRET);
         Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_login);
 
@@ -50,21 +54,9 @@ public class LoginActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void success(Result<TwitterSession> result) {
-                // The TwitterSession is also available through:
-                // Twitter.getInstance().core.getSessionManager().getActiveSession()
-                TwitterSession session = result.data;
-                // TODO: Remove toast and use the TwitterSession's userID
-                // with your app's user model
-                String msg = "Logged in as: " + session.getUserName();
+                Session.username = result.data.getUserName();
+                String msg = "Logged in as: " + Session.username;
                 isLoggedIn = true;
-
-                try {
-                    new Session();
-                    Session.user = new User(session.getUserName(), Session.bearerToken);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
             }
             @Override
@@ -77,11 +69,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Make sure that the loginButton hears the result from any
-        // Activity that it triggered.
         loginButton.onActivityResult(requestCode, resultCode, data);
 
-        if(isLoggedIn)
+        if(isLoggedIn){
+            RequestProfileInfo info = new RequestProfileInfo();
+            info.execute(Session.username, Session.tokenString);
+            Session.userProfile = info.getProfileInfo();
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+        }
     }
 }

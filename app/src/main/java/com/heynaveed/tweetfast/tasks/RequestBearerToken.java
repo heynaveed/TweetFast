@@ -1,9 +1,11 @@
-package com.heynaveed.tweetfast.utils;
+package com.heynaveed.tweetfast.tasks;
 
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import com.heynaveed.tweetfast.activities.LoginActivity;
+import com.heynaveed.tweetfast.utils.ConnectionHandler;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -17,17 +19,22 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 
-public final class BearerToken {
+public class RequestBearerToken extends AsyncTask<Void, Void, String> {
 
     private static final String TOKEN_RESOURCE_URL = "https://api.twitter.com/oauth2/token";
-    private static final String CONSUMER_KEY = "RgQf9dNuoBUEKDpneR0VVxoKX";
-    private static final String CONSUMER_SECRET = "twJtLeHTBDxhgqnNO656nUNBuCz6EOAE0uENzjtfJDSWBEF7vK";
 
-    private final String bearerToken;
+    private String tokenString;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public BearerToken() throws IOException{
-        bearerToken = requestBearerToken();
+    @Override
+    protected String doInBackground(Void... params) {
+        try {
+            tokenString = sendRequest();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return tokenString;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -48,10 +55,10 @@ public final class BearerToken {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private String requestBearerToken() throws IOException{
+    private String sendRequest() throws IOException{
 
         HttpURLConnection bearerCon = null;
-        String encodedCredentials = encodeKeys(LoginActivity.TWITTER_KEY, LoginActivity.TWITTER_SECRET);
+        String encodedCredentials = encodeKeys(LoginActivity.KEY, LoginActivity.SECRET);
 
         try{
             URL url = new URL(TOKEN_RESOURCE_URL);
@@ -61,7 +68,7 @@ public final class BearerToken {
             bearerCon.setInstanceFollowRedirects(false);
             bearerCon.setRequestMethod("POST");
             bearerCon.setRequestProperty("Host", "api.twitter.com");
-            bearerCon.setRequestProperty("User-Agent", "QualiTweeter");
+            bearerCon.setRequestProperty("RequestProfileInfo-Agent", "TweetFast");
             bearerCon.setRequestProperty("Authorization", "Basic " + encodedCredentials);
             bearerCon.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
             bearerCon.setRequestProperty("Content-Length", "29");
@@ -100,7 +107,7 @@ public final class BearerToken {
         return true;
     }
 
-    public String getBearerToken(){
-        return bearerToken;
+    public String getTokenString(){
+        return tokenString;
     }
 }

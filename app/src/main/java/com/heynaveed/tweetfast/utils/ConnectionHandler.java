@@ -11,14 +11,13 @@ import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 
 
-public class ConnectionHandler {
+public final class ConnectionHandler {
 
     private String response;
 
     public ConnectionHandler(String getResourceURL, String bToken){
         try {
             response = readResponse(requestConnection(getResourceURL, bToken));
-
         } catch (IOException ex) {
             Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -38,7 +37,7 @@ public class ConnectionHandler {
             con.setDoInput(true);
             con.setRequestMethod("GET");
             con.setRequestProperty("Host", "api.twitter.com");
-            con.setRequestProperty("User-Agent", "TweetFast");
+            con.setRequestProperty("RequestProfileInfo-Agent", "TweetFast");
             con.setRequestProperty("Authorization", "Bearer " + bToken);
             con.setUseCaches(false);
 
