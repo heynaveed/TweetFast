@@ -1,6 +1,8 @@
 package com.heynaveed.tweetfast.activities;
 
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.heynaveed.tweetfast.R;
+import com.heynaveed.tweetfast.entities.User;
 import com.heynaveed.tweetfast.utils.Colors;
 import com.heynaveed.tweetfast.utils.Session;
 import com.twitter.sdk.android.Twitter;
@@ -18,6 +21,8 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import java.io.IOException;
+
 import io.fabric.sdk.android.Fabric;
 
 public class LoginActivity extends AppCompatActivity {
@@ -27,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final String TWITTER_SECRET = "PasA4q4FM7xLDkmsqpJg5qcnxReQd9nozsewoMZuGIaFAPsFLi";
 
     private TwitterLoginButton loginButton;
+    private boolean isLoggedIn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
         loginButton.setCallback(new Callback<TwitterSession>() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void success(Result<TwitterSession> result) {
                 // The TwitterSession is also available through:
@@ -49,7 +56,15 @@ public class LoginActivity extends AppCompatActivity {
                 // TODO: Remove toast and use the TwitterSession's userID
                 // with your app's user model
                 String msg = "Logged in as: " + session.getUserName();
-                Session.username = session.getUserName();
+                isLoggedIn = true;
+
+                try {
+                    new Session();
+                    Session.user = new User(session.getUserName(), Session.bearerToken);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
             }
             @Override
@@ -65,6 +80,8 @@ public class LoginActivity extends AppCompatActivity {
         // Make sure that the loginButton hears the result from any
         // Activity that it triggered.
         loginButton.onActivityResult(requestCode, resultCode, data);
-        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+
+        if(isLoggedIn)
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
     }
 }
