@@ -40,7 +40,14 @@ public class UnitTests {
     @Test
     public void user_loadsWithUsername() throws IOException {
         final String username = "heynaveed";
-        User user = new User(username, token);
+        User user = new User(username, token.getBearerToken());
         assertEquals(username, user.getUsername().toLowerCase());
+    }
+
+    @Test
+    public void user_loadsWithProfileInfo() throws IOException {
+        final String username = "heynaveed";
+        User user = new User(username, token.getBearerToken());
+        assertEquals(true, user.getProfileInfo() != null);
     }
 }
