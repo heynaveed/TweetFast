@@ -3,6 +3,7 @@ package com.heynaveed.tweetfast;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
+import com.heynaveed.tweetfast.keys.JSONKeys;
 import com.heynaveed.tweetfast.tasks.RequestProfileInfo;
 import com.heynaveed.tweetfast.tasks.RequestBearerToken;
 
@@ -20,6 +21,8 @@ import static org.junit.Assert.*;
  */
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class UnitTests {
+
+    private static final String testUsername = "heynaveed";
 
     @Test
     public void requestsCorrectBearerToken() throws IOException{
@@ -40,9 +43,14 @@ public class UnitTests {
         assertEquals(false, mockLogin.getProfileInfo().isEmpty());
     }
 
+    @Test
+    public void checkJSONObjectReturnsField() throws IOException{
+        final MockLogin mockLogin = new MockLogin();
+        assertEquals(testUsername.toLowerCase(), mockLogin.getProfileInfo().get(JSONKeys.username.toString()).toString().toLowerCase());
+    }
+
     private class MockLogin {
 
-        private static final String testUsername = "heynaveed";
         private final RequestBearerToken requestBearerToken;
         private final RequestProfileInfo requestProfileInfo;
 
