@@ -2,9 +2,11 @@ package com.heynaveed.tweetfast;
 
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.test.InstrumentationTestCase;
+import android.test.mock.MockContext;
 
-import com.heynaveed.tweetfast.entities.User;
-import com.heynaveed.tweetfast.utils.BearerToken;
+import com.heynaveed.tweetfast.tasks.RequestProfileInfo;
+import com.heynaveed.tweetfast.tasks.RequestBearerToken;
 
 import org.junit.Test;
 
@@ -20,33 +22,15 @@ import static org.junit.Assert.*;
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class UnitTests {
 
-    private static final String testUsername = "heynaveed";
-    private static BearerToken token = null;
-
-    static {
-        try {
-            token = new BearerToken();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Test
-    public void bearerToken_isCorrect() throws IOException {
-        final String expected = "AAAAAAAAAAAAAAAAAAAAAHOWyQAAAAAAHwkJ3Ol8ircLJ718IRKF04GlNVs%3D93RhcbRWsIvGRcGuQVGJ7Aex0CDIJ9TeygwrLoVbfNrZuBCzG8";
-        assertEquals(expected, token.getBearerToken());
-    }
-
-    @Test
-    public void user_loadsWithUsername() throws IOException {
-        User user = new User(testUsername, token.getBearerToken());
-        assertEquals(testUsername, user.getUsername().toLowerCase());
-    }
-
-    @Test
-    public void user_loadsWithProfileInfo() throws IOException {
-        User user = new User(testUsername, token.getBearerToken());
-        assertEquals(true, user.getProfileInfo() != null);
-    }
+//    @Test
+//    public void user_loadsWithUsername() throws IOException {
+//        RequestProfileInfo requestProfileInfo = new RequestProfileInfo(testUsername, token.getTokenString());
+//        assertEquals(testUsername, requestProfileInfo.getUsername().toLowerCase());
+//    }
+//
+//    @Test
+//    public void user_loadsWithProfileInfo() throws IOException {
+//        RequestProfileInfo requestProfileInfo = new RequestProfileInfo(testUsername, token.getTokenString());
+//        assertEquals(true, requestProfileInfo.getProfileInfo() != null);
+//    }
 }
