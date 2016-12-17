@@ -17,15 +17,15 @@ public final class RequestProfileInfo extends AsyncTask<String, Void, JSONObject
     @Override
     protected JSONObject doInBackground(String... params) {
         try {
-            profileInfo = requestProfileInfo(new ConnectionHandler("https://api.twitter.com/1.1/users/show.json?screen_name=" + params[0] + "&user_id=2868022389", params[1]));
+            sendRequest();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return profileInfo;
     }
 
-    private JSONObject requestProfileInfo(ConnectionHandler con) throws IOException{
-        return (JSONObject)JSONValue.parse(con.getResponse());
+    public void sendRequest(String... params) throws IOException{
+        profileInfo = (JSONObject)JSONValue.parse(new ConnectionHandler("https://api.twitter.com/1.1/users/show.json?screen_name=" + params[0] + "&user_id=2868022389", params[1]).getResponse());
     }
 
     public JSONObject getProfileInfo(){

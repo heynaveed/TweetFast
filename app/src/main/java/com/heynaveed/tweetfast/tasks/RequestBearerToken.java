@@ -28,8 +28,9 @@ public class RequestBearerToken extends AsyncTask<Void, Void, String> {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected String doInBackground(Void... params) {
+
         try {
-            tokenString = sendRequest();
+            sendRequest();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,7 +56,7 @@ public class RequestBearerToken extends AsyncTask<Void, Void, String> {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private String sendRequest() throws IOException{
+    public void sendRequest() throws IOException{
 
         HttpURLConnection bearerCon = null;
         String encodedCredentials = encodeKeys(LoginActivity.KEY, LoginActivity.SECRET);
@@ -84,9 +85,8 @@ public class RequestBearerToken extends AsyncTask<Void, Void, String> {
                 String tokenType = (String)obj.get("token_type");
                 String token = (String)obj.get("access_token");
 
-                return ((tokenType.equals("bearer")) && (token != null)) ? token : "";
+                tokenString = ((tokenType.equals("bearer")) && (token != null)) ? token : "";
             }
-            return "";
         }
 
         finally{
