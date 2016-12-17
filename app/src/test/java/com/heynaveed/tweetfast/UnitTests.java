@@ -47,18 +47,18 @@ public class UnitTests {
         private final RequestProfileInfo requestProfileInfo;
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-        MockLogin() throws IOException {
+        private MockLogin() throws IOException {
             requestBearerToken = new RequestBearerToken();
             requestProfileInfo = new RequestProfileInfo();
             requestBearerToken.sendRequest();
             requestProfileInfo.sendRequest(testUsername, getTokenString());
         }
 
-        String getTokenString(){
+        private String getTokenString(){
             return requestBearerToken.getTokenString();
         }
 
-        JSONObject getProfileInfo(){
+        private JSONObject getProfileInfo(){
             return requestProfileInfo.getProfileInfo();
         }
     }
