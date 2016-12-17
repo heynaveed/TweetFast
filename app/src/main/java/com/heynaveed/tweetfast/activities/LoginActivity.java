@@ -22,6 +22,8 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import java.io.IOException;
+
 import io.fabric.sdk.android.Fabric;
 
 public class LoginActivity extends AppCompatActivity {
@@ -37,10 +39,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        RequestBearerToken requestToken = new RequestBearerToken();
-        requestToken.execute();
-        Session.tokenString = requestToken.getTokenString();
 
         ActionBar bar = getSupportActionBar();
         bar.setBackgroundDrawable(Colors.TWITTER_BLUE);
@@ -72,6 +70,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.onActivityResult(requestCode, resultCode, data);
 
         if(isLoggedIn){
+            RequestBearerToken requestToken = new RequestBearerToken();
+            requestToken.execute();
+            Session.tokenString = requestToken.getTokenString();
             RequestProfileInfo info = new RequestProfileInfo();
             info.execute(Session.username, Session.tokenString);
             Session.userProfile = info.getProfileInfo();
