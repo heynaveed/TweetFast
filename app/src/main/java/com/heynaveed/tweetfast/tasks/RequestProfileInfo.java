@@ -17,7 +17,7 @@ public final class RequestProfileInfo extends AsyncTask<String, Void, JSONObject
     @Override
     protected JSONObject doInBackground(String... params) {
         try {
-            sendRequest();
+            sendRequest(params);
         } catch (IOException e) {
             e.printStackTrace();
         }
