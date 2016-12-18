@@ -4,6 +4,7 @@ package com.heynaveed.tweetfast.tasks;
 import android.os.AsyncTask;
 
 import com.heynaveed.tweetfast.utils.ConnectionHandler;
+import com.heynaveed.tweetfast.utils.Session;
 
 import java.io.IOException;
 import org.json.simple.JSONObject;
@@ -25,7 +26,8 @@ public final class RequestProfileInfo extends AsyncTask<String, Void, JSONObject
     }
 
     public void sendRequest(String... params) throws IOException{
-        profileInfo = (JSONObject)JSONValue.parse(new ConnectionHandler("https://api.twitter.com/1.1/users/show.json?screen_name=" + params[0] + "&user_id=2868022389", params[1]).getResponse());
+        ConnectionHandler con = new ConnectionHandler("https://api.twitter.com/1.1/users/show.json?screen_name=" + params[0] + "&user_id=" + Session.userID);
+        profileInfo = (JSONObject)JSONValue.parse(con.getResponse());
     }
 
     public JSONObject getProfileInfo(){

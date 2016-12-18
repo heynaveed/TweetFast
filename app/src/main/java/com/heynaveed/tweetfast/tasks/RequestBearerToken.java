@@ -84,7 +84,6 @@ public class RequestBearerToken extends AsyncTask<Void, Void, String> {
             if(obj != null){
                 String tokenType = (String)obj.get("token_type");
                 String token = (String)obj.get("access_token");
-
                 tokenString = ((tokenType.equals("bearer")) && (token != null)) ? token : "";
             }
         }

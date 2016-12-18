@@ -15,21 +15,21 @@ public final class ConnectionHandler {
 
     private String response;
 
-    public ConnectionHandler(String getResourceURL, String bToken){
+    public ConnectionHandler(String getResourceURL){
         try {
-            response = readResponse(requestConnection(getResourceURL, bToken));
+            response = readResponse(requestConnection(getResourceURL));
         } catch (IOException ex) {
             Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public ConnectionHandler(HttpURLConnection con){
-        response = readResponse(con);
+    public ConnectionHandler(HttpURLConnection tokenCon){
+        response = readResponse(tokenCon);
     }
 
-    private HttpsURLConnection requestConnection(String resourceURL, String bToken) throws IOException{
+    private HttpsURLConnection requestConnection(String resourceURL) throws IOException{
 
-        HttpsURLConnection con = null;
+        HttpsURLConnection con;
         try{
             URL url = new URL(resourceURL);
             con = (HttpsURLConnection) url.openConnection();
@@ -38,7 +38,7 @@ public final class ConnectionHandler {
             con.setRequestMethod("GET");
             con.setRequestProperty("Host", "api.twitter.com");
             con.setRequestProperty("RequestProfileInfo-Agent", "TweetFast");
-            con.setRequestProperty("Authorization", "Bearer " + bToken);
+            con.setRequestProperty("Authorization", "Bearer " + Session.tokenString);
             con.setUseCaches(false);
 
             return con;
