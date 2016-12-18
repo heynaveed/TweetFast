@@ -32,9 +32,9 @@ public class UnitTests {
     }
 
     @Test
-    public void checkJSONObjectIsNotNull() throws IOException {
+    public void checkProfileInfoObjectIsNotNull() throws IOException {
         final MockLogin mockLogin = new MockLogin();
-        assertEquals(true, mockLogin.getProfileInfo() != null);
+        assertEquals(false, mockLogin.getProfileInfo() == null);
     }
 
     @Test
