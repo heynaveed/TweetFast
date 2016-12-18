@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.heynaveed.tweetfast.R;
+import com.heynaveed.tweetfast.entities.TwitterAccount;
 import com.heynaveed.tweetfast.tasks.RequestProfileInfo;
 import com.heynaveed.tweetfast.tasks.RequestBearerToken;
 import com.heynaveed.tweetfast.utils.Colors;
@@ -21,6 +22,8 @@ import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
+import java.util.concurrent.ExecutionException;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -51,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void success(Result<TwitterSession> result) {
                 Session.username = result.data.getUserName();
+                Session.userID = result.data.getId();
                 String msg = "Logged in as: " + Session.username;
                 isLoggedIn = true;
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
@@ -70,10 +74,22 @@ public class LoginActivity extends AppCompatActivity {
         if(isLoggedIn){
             RequestBearerToken requestToken = new RequestBearerToken();
             requestToken.execute();
-            Session.tokenString = requestToken.getTokenString();
+
+            try {
+                Session.tokenString = requestToken.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+
             RequestProfileInfo info = new RequestProfileInfo();
             info.execute(Session.username, Session.tokenString);
-            Session.userProfile = info.getProfileInfo();
+
+            try {
+                Session.user = new TwitterAccount(info.get());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
     }
