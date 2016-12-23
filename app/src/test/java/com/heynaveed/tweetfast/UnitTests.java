@@ -5,7 +5,6 @@ import android.support.annotation.RequiresApi;
 
 import com.heynaveed.tweetfast.keys.JSONKeys;
 import com.heynaveed.tweetfast.tasks.RequestProfileInfo;
-import com.heynaveed.tweetfast.tasks.RequestBearerToken;
 
 import org.json.simple.JSONObject;
 import org.junit.Test;

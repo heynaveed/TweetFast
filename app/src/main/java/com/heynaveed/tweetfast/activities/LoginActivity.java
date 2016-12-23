@@ -10,9 +10,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.heynaveed.tweetfast.R;
-import com.heynaveed.tweetfast.entities.TwitterAccount;
-import com.heynaveed.tweetfast.tasks.RequestProfileInfo;
-import com.heynaveed.tweetfast.tasks.RequestBearerToken;
 import com.heynaveed.tweetfast.utils.Colors;
 import com.heynaveed.tweetfast.utils.Session;
 import com.twitter.sdk.android.Twitter;
@@ -23,15 +20,17 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
-import java.util.concurrent.ExecutionException;
-
 import io.fabric.sdk.android.Fabric;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
 
 public class LoginActivity extends AppCompatActivity {
 
     // To be obfuscated.
-    public static final String KEY = "o2psFcURWRf6y6ymutuweNLMw";
-    public static final String SECRET = "PasA4q4FM7xLDkmsqpJg5qcnxReQd9nozsewoMZuGIaFAPsFLi";
+    public static final String CONSUMER_KEY = "o2psFcURWRf6y6ymutuweNLMw";
+    public static final String CONSUMER_SECRET = "PasA4q4FM7xLDkmsqpJg5qcnxReQd9nozsewoMZuGIaFAPsFLi";
+    public static final String ACCESS_TOKEN = "o2psFcURWRf6y6ymutuweNLMw";
+    public static final String ACCESS_TOKEN_SECRET = "PasA4q4FM7xLDkmsqpJg5qcnxReQd9nozsewoMZuGIaFAPsFLi";
 
     private TwitterLoginButton loginButton;
     private boolean isLoggedIn = false;
@@ -44,9 +43,18 @@ public class LoginActivity extends AppCompatActivity {
         ActionBar bar = getSupportActionBar();
         bar.setBackgroundDrawable(Colors.TWITTER_BLUE);
 
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(KEY, SECRET);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(CONSUMER_KEY, CONSUMER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_login);
+
+        ConfigurationBuilder configBuilder = new ConfigurationBuilder();
+        configBuilder.setDebugEnabled(true)
+                .setOAuthConsumerKey(CONSUMER_KEY)
+                .setOAuthConsumerSecret(CONSUMER_SECRET)
+                .setOAuthAccessToken(ACCESS_TOKEN)
+                .setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET);
+
+        Session.resources = new TwitterFactory(configBuilder.build()).getInstance();
 
         loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
         loginButton.setCallback(new Callback<TwitterSession>() {
@@ -55,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             public void success(Result<TwitterSession> result) {
                 Session.username = result.data.getUserName();
                 Session.userID = result.data.getId();
+
                 String msg = "Logged in as: " + Session.username;
                 isLoggedIn = true;
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
@@ -72,24 +81,6 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.onActivityResult(requestCode, resultCode, data);
 
         if(isLoggedIn){
-            RequestBearerToken requestToken = new RequestBearerToken();
-            requestToken.execute();
-
-            try {
-                Session.tokenString = requestToken.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-
-            RequestProfileInfo info = new RequestProfileInfo();
-            info.execute(Session.username, Session.tokenString);
-
-            try {
-                Session.user = new TwitterAccount(info.get());
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
     }
