@@ -14,7 +14,6 @@ public class Session {
     public static Twitter resources;
     public static long userID;
     public static String username;
-    public static String tokenString;
     public static User user;
 
 }

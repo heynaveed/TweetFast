@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.heynaveed.tweetfast.R;
+import com.heynaveed.tweetfast.tasks.RequestUserInfo;
 import com.heynaveed.tweetfast.utils.Colors;
 import com.heynaveed.tweetfast.utils.Session;
 import com.twitter.sdk.android.Twitter;
@@ -63,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
             public void success(Result<TwitterSession> result) {
                 Session.username = result.data.getUserName();
                 Session.userID = result.data.getId();
-
                 String msg = "Logged in as: " + Session.username;
                 isLoggedIn = true;
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
@@ -81,6 +81,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.onActivityResult(requestCode, resultCode, data);
 
         if(isLoggedIn){
+            RequestUserInfo requestUserInfo = new RequestUserInfo();
+            requestUserInfo.execute(Session.username);
+            Session.user = requestUserInfo.getUser();
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
     }
