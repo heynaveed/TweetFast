@@ -28,10 +28,10 @@ import twitter4j.conf.ConfigurationBuilder;
 public class LoginActivity extends AppCompatActivity {
 
     // To be obfuscated.
-    public static final String CONSUMER_KEY = "o2psFcURWRf6y6ymutuweNLMw";
-    public static final String CONSUMER_SECRET = "PasA4q4FM7xLDkmsqpJg5qcnxReQd9nozsewoMZuGIaFAPsFLi";
-    public static final String ACCESS_TOKEN = "o2psFcURWRf6y6ymutuweNLMw";
-    public static final String ACCESS_TOKEN_SECRET = "PasA4q4FM7xLDkmsqpJg5qcnxReQd9nozsewoMZuGIaFAPsFLi";
+    public static final String CONSUMER_KEY = "ZjYxVn6yXkMVmHJhIEWVSx4Qx";
+    public static final String CONSUMER_SECRET = "NQDT8c075HPX1KdjvYyUU3fnlpSwc2hmBeAPKIhQv5jqnJGJrS";
+    public static final String ACCESS_TOKEN = "2868022389-DEBbaHqaFrdlseBCsxTYjoG8aDIVfLfOsjoa70H";
+    public static final String ACCESS_TOKEN_SECRET = "wfKuRByIprNRnUbxQZB8LMf534xvMoJ7127eLL2f8V8kU";
 
     private TwitterLoginButton loginButton;
     private boolean isLoggedIn = false;
